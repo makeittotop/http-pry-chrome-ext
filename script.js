@@ -8,7 +8,9 @@ var callback = function (info) {
   console.log("Intercepted: " + info.url);
   request_objs.push(info);   
 
-  return {cancel: true};
+  //return { cancel: true };
+  // redirects all images to some cute cat image 
+  return { redirectUrl: "http://susanspetblog.com/wp-content/uploads/2014/12/Love-Cute-cat-kitty.jpg" };
 }
 
 $(document).ready(function() {
