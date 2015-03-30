@@ -1,10 +1,11 @@
 var request_objs = [];
+var response_header_objs = [];
 
-//var filters = { urls: ["<all_urls>"], types: ["image"] };
+var filters = { urls: ["<all_urls>"], types: ["image"] };
 //var filters = { urls: ["*://drive.google.com/*"], types: ["xmlhttprequest"] };
-var filters = { urls: ["*://drive.google.com/*"] };
+//var filters = { urls: ["*://drive.google.com/*"] };
 
-var extra_info_spec = ["blocking"];
+var extra_infospec = ["blocking", "requestBody"];
 
 var callback = function (info) {
   console.log("Intercepted: " + info.url);
@@ -28,9 +29,20 @@ var callback = function (info) {
   // return { redirectUrl: "http://susanspetblog.com/wp-content/uploads/2014/12/Love-Cute-cat-kitty.jpg" };
 }
 
+var callback_on_headers_received = function (info) {
+  console.log("Received header from: " + info); 
+  response_header_objs.push(info);
+
+  return { cancel: true };
+}
+
 $(document).ready(function() {
   console.log("HTTP Pry ...");
 
-  chrome.webRequest.onBeforeRequest.addListener(callback, filters, extra_info_spec);
+  // Before firing the HTTP request
+  //chrome.webRequest.onBeforeRequest.addListener(callback, filters, extra_infospec);
+
+  // After receiving HTTP headers in response to a request
+  chrome.webRequest.onHeadersReceived.addListener(callback_on_headers_received, filters, ["blocking", "responseHeaders"]);
 
 });
