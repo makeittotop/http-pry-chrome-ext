@@ -10,10 +10,17 @@ var callback = function (info) {
   console.log("Intercepted: " + info.url);
   request_objs.push(info);   
 
+  var re = /.*download*/i;
+
+  // I intend to not block the downloads but just the uploads
   if (info.type == 'xmlhttprequest' && info.method == 'POST') {
+      if (info.url.match(re) == null) {
+          console.log("Blocked: " + info.url);
+          return { cancel: true };
+      }
       // Disallow POST requests for a specific domain
       // For instance in this case, no uploads / downloads can happen to / from the google drive, via the chrome browser
-      return { cancel: true };
+      //return { cancel: true };
   }
 
   // return { cancel: true };
